@@ -8,6 +8,7 @@ public class FirstScript : MonoBehaviour
     void Start()
     {
         //randomstuff
+        //bruder was hab ich kein bock mehr auf git
     }
 
     // Update is called once per frame
