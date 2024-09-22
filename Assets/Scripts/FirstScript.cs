@@ -4,16 +4,5 @@ using UnityEngine;
 
 public class FirstScript : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        //randomstuff
-        //bruder was hab ich kein bock mehr auf git
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    //this is an empty script i used to access the Rider Console because i did not feel like using git bash
 }

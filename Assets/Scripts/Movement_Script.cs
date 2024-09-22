@@ -9,8 +9,8 @@ public class Movement_Script : MonoBehaviour
 
     private Animator player_animator;
     
-    private List<Vector3> TARGETS= new List<Vector3>{new Vector3(-7.5f, 9.5f, 0f), new Vector3(-7.5f, 13.5f, 0f), new Vector3(-12.5f, 13.5f, 0f), new Vector3(-12.5f, 9.5f, 0f)};
-    private float DURATION_HORIZONTAL = 3;
+    private List<Vector3> TARGETS= new List<Vector3>{new Vector3(-12.5f, 9.5f, 0f), new Vector3(-7.5f, 9.5f, 0f), new Vector3(-7.5f, 13.5f, 0f), new Vector3(-12.5f, 13.5f, 0f)};
+    private float DURATION_PER_SIDE = 2;
     //private float DURATION_VERTICAL = 2;
 
     private Transform Target;
@@ -24,10 +24,10 @@ public class Movement_Script : MonoBehaviour
     void Start()
     {
         StartTime = Time.time;
-        Direction = 0;
+        Direction = 3;
         EndPosition = TARGETS[Direction];
         StartPosition = player.transform.position;
-        Duration = DURATION_HORIZONTAL;
+        Duration = DURATION_PER_SIDE;
         player_animator = player.GetComponent<Animator>();
         player_animator.SetInteger("Direction", Direction);
 
@@ -44,13 +44,13 @@ public class Movement_Script : MonoBehaviour
         if (Vector3.Distance(player.transform.position, EndPosition) <= 0.1f)
         { 
             player.transform.position = EndPosition;
-            if (Direction < 3)
+            if (Direction > 0)
             {
-                Direction++;
+                Direction--;
             }
             else
             {
-                Direction = 0;
+                Direction = 3;
             }
 
             StartTime = Time.time;
