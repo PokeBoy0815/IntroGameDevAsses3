@@ -1,11 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Purchasing;
 
 public class LevelGenerator : MonoBehaviour
 {
     [SerializeField] private GameObject level;
     [SerializeField] private Camera camera;
+
+    [SerializeField] private GameObject tjun;
+    [SerializeField] private GameObject outWall;
+    [SerializeField] private GameObject outCorner;
+    [SerializeField] private GameObject inWall;
+    [SerializeField] private GameObject inCorner;
+    [SerializeField] private GameObject pellet;
+    [SerializeField] private GameObject powerPellet;
+
+    private int mapSizeX;
+    private int mapSizeY;
     
     
     int[,] levelMap = {
@@ -31,13 +43,59 @@ public class LevelGenerator : MonoBehaviour
         {
             Destroy(level.transform.GetChild(i).gameObject);
         }
-        Debug.Log(levelMap.GetLength(0));
-        camera.orthographicSize = levelMap.GetLength(0); //divide by two with the real array
-        Debug.Log(levelMap.GetLength(1));
 
-        for (int i = 0; i < UPPER; i++)
+        mapSizeX = levelMap.GetLength(1);
+        mapSizeY = levelMap.GetLength(0);
+        
+        Debug.Log(mapSizeY);
+        camera.orthographicSize = mapSizeY;
+        Debug.Log(mapSizeX);
+        
+        //muss in funktion um clean zu sein
+        for (int i = 0; i < mapSizeY; i++)
         {
-            
+            for (int j = 0; j < mapSizeX; j++)
+            {
+                int partNr = levelMap[i,j];
+                if (partNr == 0)
+                {
+                    continue;
+                }
+                float x = (j - mapSizeX);
+                float y = (mapSizeY - i);
+                
+                GameObject mapPart = Instantiate(GetObjFromPartNr(partNr));
+                mapPart.transform.position = new Vector3(x, y, 0);
+                mapPart.transform.parent = level.transform;
+
+
+                //Debug.Log(place);
+            }
+        }
+        //bis hier damit man es dann auhc auf die reversten arrays anwenden kann
+        
+    }
+
+    GameObject GetObjFromPartNr(int partNr)
+    {
+        switch (partNr)
+        {
+            case 1:
+                return outCorner;
+            case 2:
+                return outWall;
+            case 3:
+                return inCorner;
+            case 4:
+                return inWall;
+            case 5:
+                return pellet;
+            case 6:
+                return powerPellet;
+            case 7:
+                return tjun;
+            default:
+                return pellet;
         }
         
     }
@@ -46,6 +104,31 @@ public class LevelGenerator : MonoBehaviour
     void Update()
     {
         
+    }
+    
+    //this will be the function that determines the rotation of the pieces, switch case for ey kind of piece
+    int findRotation(int x, int y, int[][] arr)
+    {
+        switch (arr[x][y])
+        {
+            case 1:
+                return 1;
+            case 2:
+                //falls links oder recht nicht 0/5/6 sind -> 0
+                //else -> 90
+                return 2;
+            case 3:
+                return 1;
+            case 4:
+                //falls links oder recht nicht 0/5/6 sind -> 0
+                //else -> 90
+                return 1;
+            case 7:
+                return 2;
+            default:
+                return 0;
+        }
+        return 0;
     }
     
 }
