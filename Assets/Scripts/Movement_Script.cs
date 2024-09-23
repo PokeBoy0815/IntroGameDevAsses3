@@ -57,7 +57,6 @@ public class Movement_Script : MonoBehaviour
             StartPosition = EndPosition;
             EndPosition = TARGETS[Direction];
             player_animator.SetInteger("Direction", Direction);
-            Debug.Log(EndPosition);
         }
         
         
