@@ -18,6 +18,9 @@ public class LevelGenerator : MonoBehaviour
 
     private int mapSizeX;
     private int mapSizeY;
+
+    private int fullMapSizeX;
+    private int fullMapSizeY;
     
     
     int[,] levelMap = {
@@ -37,6 +40,8 @@ public class LevelGenerator : MonoBehaviour
         {2,2,2,2,2,1,5,3,3,0,4,0,0,0},
         {0,0,0,0,0,0,5,0,0,0,4,0,0,0},
     };
+
+    private int[,] fullMap;
     void Start()
     {
         for (int i = 0; i < level.transform.childCount; i++)
@@ -46,23 +51,62 @@ public class LevelGenerator : MonoBehaviour
 
         mapSizeX = levelMap.GetLength(1);
         mapSizeY = levelMap.GetLength(0);
+        fullMapSizeX = mapSizeX * 2 + 2;
+        fullMapSizeY = mapSizeY * 2 + 1;
         
         Debug.Log(mapSizeY);
         camera.orthographicSize = mapSizeY;
         Debug.Log(mapSizeX);
+
+        
+        //need to create new array, size= [2times-1+2,2times+2]
+        //0 all around
+        fullMap = new int[fullMapSizeY, fullMapSizeX];
+        
+        for (int i = 0; i <= mapSizeY; i++)
+        {
+            
+            for (int j = 0; j <= mapSizeX; j++)
+            {
+                if (i==0)
+                {
+                    fullMap[i, j] = 0;
+                    continue;
+                }
+                if (j==0)
+                {
+                    fullMap[i, j] = 0;
+                    continue; 
+                }
+                fullMap[i, j] = levelMap[i - 1, j - 1];
+                fullMap[i, fullMapSizeX-j] = levelMap[i - 1, j - 1];
+            }
+        }
+        Debug.Log(fullMap);
         
         //muss in funktion um clean zu sein
         for (int i = 0; i < mapSizeY; i++)
         {
-            for (int j = 0; j < mapSizeX; j++)
+            for (int j = 0; j < fullMapSizeX; j++)
             {
-                int partNr = levelMap[i,j];
+                int partNr = fullMap[i,j];
                 if (partNr == 0)
                 {
                     continue;
                 }
+                
                 float x = (j - mapSizeX);
                 float y = (mapSizeY - i);
+                if (j>mapSizeX+1)
+                {
+                    x -= 1.5f;
+                    y += 0.5f;
+                }    
+                if (j<=mapSizeX+1)
+                {
+                    x -= 0.5f;
+                    y += 0.5f;
+                }  
                 
                 GameObject mapPart = Instantiate(GetObjFromPartNr(partNr));
                 mapPart.transform.position = new Vector3(x, y, 0);
