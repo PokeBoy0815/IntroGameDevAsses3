@@ -63,6 +63,7 @@ public class LevelGenerator : MonoBehaviour
         //0 all around
         fullMap = new int[fullMapSizeY, fullMapSizeX];
         
+        //mirror horizontally
         for (int i = 0; i <= mapSizeY; i++)
         {
             
@@ -82,10 +83,22 @@ public class LevelGenerator : MonoBehaviour
                 fullMap[i, fullMapSizeX-j] = levelMap[i - 1, j - 1];
             }
         }
+        //mirror vertically
+        for (int i = 0; i < mapSizeY; i++)
+        {
+            for (int j = 0; j <= mapSizeX; j++)
+            {
+                fullMap[fullMapSizeY - (i+1), j] = fullMap[i, j];
+                //Debug.Log("second half begins");
+                fullMap[fullMapSizeY - (i+1), fullMapSizeX-(j+1)] = fullMap[i, j];
+                //Debug.Log("second half begins");
+            }
+        }
+        
         Debug.Log(fullMap);
         
         //muss in funktion um clean zu sein
-        for (int i = 0; i < mapSizeY; i++)
+        for (int i = 0; i < fullMapSizeY; i++)
         {
             for (int j = 0; j < fullMapSizeX; j++)
             {
@@ -107,6 +120,10 @@ public class LevelGenerator : MonoBehaviour
                     x -= 0.5f;
                     y += 0.5f;
                 }  
+                if (j>mapSizeX+1&&i>mapSizeY)
+                {
+                    x += 1f;
+                } 
                 
                 GameObject mapPart = Instantiate(GetObjFromPartNr(partNr));
                 mapPart.transform.position = new Vector3(x, y, 0);
