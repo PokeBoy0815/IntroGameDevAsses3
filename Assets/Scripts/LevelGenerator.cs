@@ -72,15 +72,17 @@ public class LevelGenerator : MonoBehaviour
                 if (i==0)
                 {
                     fullMap[i, j] = 0;
+                    fullMap[i, fullMapSizeX-1] = 0;
                     continue;
                 }
                 if (j==0)
                 {
                     fullMap[i, j] = 0;
+                    fullMap[i, fullMapSizeX-1] = 0;
                     continue; 
                 }
                 fullMap[i, j] = levelMap[i - 1, j - 1];
-                fullMap[i, fullMapSizeX-j] = levelMap[i - 1, j - 1];
+                fullMap[i, fullMapSizeX-(j+1)] = levelMap[i - 1, j - 1];
             }
         }
         //mirror vertically
@@ -95,12 +97,21 @@ public class LevelGenerator : MonoBehaviour
             }
         }
         
-        Debug.Log(fullMap);
+        for (int i = 0; i < fullMap.GetLength(0); i++)
+        {
+            Debug.Log(fullMap[i,fullMap.GetLength(1)-1]);
+        }
+        /*
+        Debug.Log(fullMap[1,fullMap.GetLength(1)]-1);
+        Debug.Log(fullMap[fullMap.GetLength(0)-1,fullMap.GetLength(1)]-1);
+        
+        Debug.Log(fullMap[fullMap.GetLength(0)-1,0]);
+        */
         
         //muss in funktion um clean zu sein
         for (int i = 0; i < fullMapSizeY; i++)
         {
-            for (int j = 0; j < fullMapSizeX; j++)
+            for (int j = 0; j < fullMapSizeX-1; j++)
             {
                 int partNr = fullMap[i,j];
                 if (partNr == 0)
@@ -120,13 +131,16 @@ public class LevelGenerator : MonoBehaviour
                     x -= 0.5f;
                     y += 0.5f;
                 }  
-                if (j>mapSizeX+1&&i>mapSizeY)
+                
+
+                if (j>mapSizeX+1)
                 {
                     x += 1f;
-                } 
+                }
                 
                 GameObject mapPart = Instantiate(GetObjFromPartNr(partNr));
                 mapPart.transform.position = new Vector3(x, y, 0);
+                mapPart.transform.Rotate(0, 0, findRotation(i, j));
                 mapPart.transform.parent = level.transform;
 
 
@@ -168,28 +182,64 @@ public class LevelGenerator : MonoBehaviour
     }
     
     //this will be the function that determines the rotation of the pieces, switch case for ey kind of piece
-    int findRotation(int x, int y, int[][] arr)
+    int findRotation(int x, int y)
     {
-        switch (arr[x][y])
+        switch (fullMap[x,y])
         {
             case 1:
-                return 1;
+                if (fullMap[x-1,y]!=1&&fullMap[x-1,y]!=2&&fullMap[x,y+1]!=1&&fullMap[x,y+1]!=2)
+                {
+                    return 0;
+                }
+                if (fullMap[x+1,y]!=1&&fullMap[x+1,y]!=2&&fullMap[x,y-1]!=1&&fullMap[x,y-1]!=2)
+                {
+                    return 180;
+                }
+                if (fullMap[x+1,y]!=1&&fullMap[x+1,y]!=2&&fullMap[x,y+1]!=1&&fullMap[x,y+1]!=2)
+                {
+                    return 270;
+                }
+                return 90;
             case 2:
-                //falls links oder recht nicht 0/5/6 sind -> 0
-                //else -> 90
-                return 2;
+                if (fullMap[x-1,y]==1||fullMap[x-1,y]==2)
+                {
+                    //falls links oder recht nicht 0/5/6 sind -> 0
+                    //else -> 90
+                    return 90;
+                }
+                return 0;
             case 3:
-                return 1;
+                if ((fullMap[x - 1, y] == 3 || fullMap[x - 1, y] == 4)&&
+                    (fullMap[x, y + 1] == 3 || fullMap[x, y + 1] == 4))
+                {
+                    return 180;
+                }
+                if ((fullMap[x + 1, y] == 3 || fullMap[x + 1, y] == 4)&&(fullMap[x, y - 1] == 3 || fullMap[x, y - 1] == 4))
+                {
+                    return 0;
+                }
+                if (fullMap[x+1,y]==3||fullMap[x+1,y]==4&&fullMap[x,y+1]==3||fullMap[x,y+1]==4)
+                {
+                    return 90;
+                }
+                return 270;
             case 4:
                 //falls links oder recht nicht 0/5/6 sind -> 0
                 //else -> 90
-                return 1;
+                if ((fullMap[x - 1, y] == 3 || fullMap[x - 1, y] == 4|| fullMap[x - 1, y] == 7)&&(fullMap[x+1,y]==3||fullMap[x+1,y]==4||fullMap[x+1,y]==7))
+                {
+                    //falls links oder recht nicht 0/5/6 sind -> 0
+                    //else -> 90
+                    return 90;
+                }
+                return 0;
             case 7:
-                return 2;
+                return 0;
+                
+                return 0;
             default:
                 return 0;
         }
-        return 0;
     }
     
 }
