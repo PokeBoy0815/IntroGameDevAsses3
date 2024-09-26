@@ -54,9 +54,9 @@ public class LevelGenerator : MonoBehaviour
         fullMapSizeX = mapSizeX * 2 + 2;
         fullMapSizeY = mapSizeY * 2 + 1;
         
-        Debug.Log(mapSizeY);
+        //Debug.Log(mapSizeY);
         camera.orthographicSize = mapSizeY;
-        Debug.Log(mapSizeX);
+        //Debug.Log(mapSizeX);
 
         
         //need to create new array, size= [2times-1+2,2times+2]
@@ -96,17 +96,6 @@ public class LevelGenerator : MonoBehaviour
                 //Debug.Log("second half begins");
             }
         }
-        
-        for (int i = 0; i < fullMap.GetLength(0); i++)
-        {
-            Debug.Log(fullMap[i,fullMap.GetLength(1)-1]);
-        }
-        /*
-        Debug.Log(fullMap[1,fullMap.GetLength(1)]-1);
-        Debug.Log(fullMap[fullMap.GetLength(0)-1,fullMap.GetLength(1)]-1);
-        
-        Debug.Log(fullMap[fullMap.GetLength(0)-1,0]);
-        */
         
         //muss in funktion um clean zu sein
         for (int i = 0; i < fullMapSizeY; i++)
@@ -174,12 +163,7 @@ public class LevelGenerator : MonoBehaviour
         }
         
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
     
     //this will be the function that determines the rotation of the pieces, switch case for ey kind of piece
     int findRotation(int x, int y)
@@ -234,8 +218,6 @@ public class LevelGenerator : MonoBehaviour
                 }
                 return 0;
             case 7:
-                return 0;
-                
                 return 0;
             default:
                 return 0;
