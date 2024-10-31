@@ -34,4 +34,9 @@ public class UIManager : MonoBehaviour
         */
     }
     
+    public void OnclickLoadStartScreen()
+    {
+        SceneManager.LoadSceneAsync(0);
+    }
+    
 }
